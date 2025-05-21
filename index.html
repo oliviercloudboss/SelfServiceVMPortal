@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Request VM Access</title>
+</head>
+<body>
+  <h2>Request VM Access</h2>
+  <form id="accessForm">
+    <input type="email" id="email" placeholder="Enter your email" required />
+    <button type="submit">Request Access</button>
+  </form>
+
+  <script>
+    const form = document.getElementById("accessForm");
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const email = document.getElementById("email").value;
+
+      const response = await fetch("https://<YOUR-AZURE-FUNCTION-URL>", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
+      });
+
+      if (response.ok) {
+        alert("Login info has been emailed to you!");
+      } else {
+        alert("Something went wrong.");
+      }
+    });
+  </script>
+</body>
+</html>
