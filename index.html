@@ -3,99 +3,62 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Request VM Access</title>
+  <title>Azure VM Access Portal</title>
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
-
     body {
-      margin: 0;
-      padding: 0;
-      font-family: 'Inter', sans-serif;
-      background: linear-gradient(to bottom right, #e6f0fa, #f4f9ff);
-      height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .azure-bg {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-image: url('./Microsoft_Azure_Logo.svg.png');
-      background-size: 120px;
-      background-repeat: repeat;
-      background-position: center;
-      opacity: 0.04;
-      z-index: 0;
-    }
-
-    .form-container {
-      position: relative;
-      z-index: 1;
-      background: #ffffffcc;
-      padding: 40px;
-      border-radius: 16px;
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-      width: 100%;
-      max-width: 400px;
-      text-align: center;
-    }
-
-    h1 {
-      margin-bottom: 24px;
-      font-size: 24px;
-      color: #235aaf;
-    }
-
-    input[type="text"],
-    input[type="email"] {
-      width: 100%;
-      padding: 12px;
-      margin-bottom: 16px;
-      border: 1px solid #ccc;
-      border-radius: 8px;
-      font-size: 16px;
-    }
-
-    button {
-      width: 100%;
-      padding: 12px;
-      background-color: #0078d4;
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, #007FFF, #00C9FF);
       color: white;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding-top: 100px;
+    }
+    h1 {
+      font-size: 2.5em;
+      margin-bottom: 20px;
+    }
+    form {
+      background: rgba(255, 255, 255, 0.1);
+      padding: 30px;
+      border-radius: 10px;
+      backdrop-filter: blur(10px);
+    }
+    input {
+      padding: 10px;
+      margin: 10px;
+      border-radius: 5px;
       border: none;
-      border-radius: 8px;
-      font-size: 16px;
+      width: 250px;
+    }
+    button {
+      padding: 10px 20px;
+      background-color: #ffffff;
+      color: #007FFF;
+      border: none;
+      border-radius: 5px;
+      font-weight: bold;
       cursor: pointer;
-      transition: background-color 0.3s ease;
+      margin-top: 10px;
     }
-
     button:hover {
-      background-color: #005a9e;
+      background-color: #e0f0ff;
     }
-
-    .message {
-      margin-top: 16px;
-      font-size: 14px;
-      color: #333;
+    #response {
+      margin-top: 20px;
+      font-weight: bold;
     }
   </style>
 </head>
 <body>
-  <div class="azure-bg"></div>
-
-  <div class="form-container">
-    <h1>Request VM Access</h1>
-    <input type="text" id="firstName" placeholder="First Name" required />
-    <input type="text" id="lastName" placeholder="Last Name" required />
-    <input type="email" id="email" placeholder="Email Address" required />
-    <button onclick="submitForm()">Submit</button>
-    <div class="message" id="message"></div>
-  </div>
+  <h1>Request VM Access</h1>
+  <form id="accessForm">
+    <input type="text" id="firstName" placeholder="First Name" required /><br />
+    <input type="text" id="lastName" placeholder="Last Name" required /><br />
+    <input type="email" id="email" placeholder="Email Address" required /><br />
+    <button type="submit">Request Access</button>
+  </form>
+  <div id="response"></div>
 
   <script src="index.js"></script>
 </body>
