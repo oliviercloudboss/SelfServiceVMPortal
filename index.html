@@ -4,21 +4,20 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Request VM Access</title>
+  <script src="https://www.google.com/recaptcha/api.js" async defer></script>
   <style>
-    body { font-family: Arial, sans-serif; padding: 2rem; background-color: #f9f9f9; color: #333; }
-    form { max-width: 400px; margin: auto; background: #fff; padding: 2rem; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
-    label { display: block; margin: 1rem 0 0.5rem; font-weight: bold; }
-    input { width: 100%; padding: 0.5rem; border: 1px solid #ccc; border-radius: 4px; }
-    button { margin-top: 1rem; padding: 0.5rem 1rem; background-color: #28a745; color: white; border: none; border-radius: 4px; cursor: pointer; }
-    button:hover { background-color: #218838; }
+    body { font-family: Arial, sans-serif; padding: 2rem; }
+    form { max-width: 400px; margin: auto; }
+    label { display: block; margin: 1rem 0 0.5rem; }
+    input { width: 100%; padding: 0.5rem; }
+    button { margin-top: 1rem; padding: 0.5rem 1rem; }
     #message { margin-top: 1rem; font-weight: bold; }
     .success { color: green; }
     .error { color: red; }
   </style>
-  <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 </head>
 <body>
-  <h2 style="text-align:center;">Request VM Access</h2>
+  <h2>Request VM Access</h2>
   <form id="accessForm">
     <label for="firstName">First Name:</label>
     <input id="firstName" name="firstName" required />
@@ -45,12 +44,11 @@
       const firstName = form.firstName.value.trim();
       const lastName = form.lastName.value.trim();
       const email = form.email.value.trim();
-      const recaptchaToken = grecaptcha.getResponse();
-
       messageEl.textContent = "";
       messageEl.className = "";
 
-      if (!recaptchaToken) {
+      const token = grecaptcha.getResponse();
+      if (!token) {
         messageEl.textContent = "❌ Please complete the reCAPTCHA.";
         messageEl.classList.add("error");
         return;
@@ -59,13 +57,13 @@
       const res = await fetch("https://green-grass-0e8120f0f.6.azurestaticapps.net", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ firstName, lastName, email, recaptchaToken })
+        body: JSON.stringify({ firstName, lastName, email, token }),
       });
 
       const text = await res.text();
       messageEl.textContent = res.ok ? `✅ ${text}` : `❌ ${text}`;
       messageEl.className = res.ok ? "success" : "error";
-      grecaptcha.reset();
+      grecaptcha.reset(); // Reset reCAPTCHA after submit
     });
   </script>
 </body>
