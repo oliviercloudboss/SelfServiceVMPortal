@@ -1,40 +1,36 @@
-document.getElementById('vmAccessForm').addEventListener('submit', async function (e) {
+document.getElementById("accessForm").addEventListener("submit", async function (e) {
   e.preventDefault();
 
-  const result = document.getElementById('result');
-  result.textContent = 'Submitting...';
+  const firstName = document.getElementById("firstName").value.trim();
+  const lastName = document.getElementById("lastName").value.trim();
+  const email = document.getElementById("email").value.trim();
+  const resultDiv = document.getElementById("result");
 
-  const form = e.target;
-  const formData = {
-    firstName: form.firstName.value,
-    lastName: form.lastName.value,
-    email: form.email.value,
-    recaptchaToken: grecaptcha.getResponse(),
-  };
-
-  if (!formData.recaptchaToken) {
-    result.textContent = 'Please complete the reCAPTCHA.';
-    return;
-  }
+  resultDiv.innerHTML = "Submitting request...";
 
   try {
-    const response = await fetch('/api/request-vm-access', {
-      method: 'POST',
+    const response = await fetch("/api/request-vm-access", {
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json"
       },
-      body: JSON.stringify(formData),
+      body: JSON.stringify({
+        firstName,
+        lastName,
+        email
+      })
     });
 
     const data = await response.json();
 
     if (response.ok) {
-      result.textContent = `✅ Request submitted! Credentials sent to: ${formData.email}`;
+      resultDiv.innerHTML = `<span style="color: green;">✅ ${data.message}</span>`;
+      document.getElementById("accessForm").reset();
     } else {
-      result.textContent = `❌ Error: ${data.error || 'Unknown error'}`;
+      resultDiv.innerHTML = `<span style="color: red;">❌ ${data.error || "Something went wrong."}</span>`;
     }
-  } catch (err) {
-    console.error(err);
-    result.textContent = '❌ Submission failed. Check console.';
+  } catch (error) {
+    console.error("Error:", error);
+    resultDiv.innerHTML = `<span style="color: red;">❌ Request failed. Please try again later.</span>`;
   }
 });
