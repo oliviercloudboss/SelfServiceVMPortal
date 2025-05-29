@@ -1,34 +1,31 @@
-document.getElementById("accessForm").addEventListener("submit", async function (e) {
+document.getElementById('accessForm').addEventListener('submit', async (e) => {
   e.preventDefault();
 
-  const firstName = document.getElementById("firstName").value.trim();
-  const lastName = document.getElementById("lastName").value.trim();
-  const email = document.getElementById("email").value.trim();
+  const firstName = document.getElementById('firstName').value.trim();
+  const lastName = document.getElementById('lastName').value.trim();
+  const email = document.getElementById('email').value.trim();
 
   if (!firstName || !lastName || !email) {
-    alert("Please fill out all required fields.");
+    alert("All fields are required.");
     return;
   }
 
-  const payload = { firstName, lastName, email };
-
   try {
-    const response = await fetch("/api/request-vm-access", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload)
+    const res = await fetch('/api/request-vm-access', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ firstName, lastName, email })
     });
 
-    const text = await response.text();
-
-    if (response.ok) {
-      alert("✅ " + text);
-      document.getElementById("accessForm").reset();
+    if (res.ok) {
+      const result = await res.json();
+      alert("Request submitted successfully! Check your email.");
     } else {
-      alert("❌ Error: " + text);
+      const error = await res.text();
+      alert("Failed to submit request: " + error);
     }
-  } catch (error) {
-    console.error("❌ Network error:", error);
-    alert("An error occurred while submitting the request.");
+  } catch (err) {
+    console.error(err);
+    alert("An unexpected error occurred.");
   }
 });
