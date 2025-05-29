@@ -1,20 +1,10 @@
 document.getElementById("accessForm").addEventListener("submit", async function (e) {
   e.preventDefault();
 
-  const statusEl = document.getElementById("status");
-  statusEl.innerText = "Submitting...";
-  statusEl.style.color = "#0078d4";
-
   const firstName = document.getElementById("firstName").value.trim();
   const lastName = document.getElementById("lastName").value.trim();
   const email = document.getElementById("email").value.trim();
-
-  const recaptchaToken = grecaptcha.getResponse();
-  if (!recaptchaToken) {
-    statusEl.innerText = "❌ Please complete the reCAPTCHA";
-    statusEl.style.color = "red";
-    return;
-  }
+  const resultBox = document.getElementById("result");
 
   try {
     const response = await fetch("/api/request-vm-access", {
@@ -22,29 +12,16 @@ document.getElementById("accessForm").addEventListener("submit", async function 
       headers: {
         "Content-Type": "application/json"
       },
-      body: JSON.stringify({
-        firstName,
-        lastName,
-        email,
-        recaptchaToken
-      })
+      body: JSON.stringify({ firstName, lastName, email })
     });
 
-    const result = await response.text();
-
-    if (response.ok) {
-      statusEl.innerText = "✅ Request submitted successfully! Please check your email.";
-      statusEl.style.color = "green";
-      document.getElementById("accessForm").reset();
-      grecaptcha.reset();
-    } else {
-      statusEl.innerText = "❌ Error: " + result;
-      statusEl.style.color = "red";
-      grecaptcha.reset();
-    }
-  } catch (err) {
-    statusEl.innerText = "❌ Submission failed. Please try again.";
-    statusEl.style.color = "red";
-    grecaptcha.reset();
+    const resultText = await response.text();
+    resultBox.className = "alert mt-3 " + (response.ok ? "alert-success" : "alert-danger");
+    resultBox.textContent = resultText;
+    resultBox.classList.remove("d-none");
+  } catch (error) {
+    resultBox.className = "alert alert-danger mt-3";
+    resultBox.textContent = "Something went wrong. Please try again.";
+    resultBox.classList.remove("d-none");
   }
 });
